@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miori Shop - รับทํา ป้าย ลายน้ำ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mitr': ['Mitr', 'sans-serif'], 'fredoka': ['Fredoka', 'sans-serif'] },
+      colors: {
+        'pj-bg': '#fff5f7', 'pj-blue-light': '#ffccd5', 'pj-blue-main': '#ff85a2', 'pj-blue-dark': '#705446',
+        'pj-yellow-light': '#fff3c4', 'pj-yellow-main': '#ffe066', 'pj-pink': '#ffb3c6', 'pj-white': '#ffffff',
+      },
+      boxShadow: { 'soft': '0 10px 40px -10px rgba(255, 133, 162, 0.25)', 'hard': '4px 4px 0px 0px rgba(112, 84, 70, 0.15)' }
+    }
+  }
+}
+</script>
+<style>
+body { font-family: 'Mitr', sans-serif; background-color: #fff5f7; overflow-x: hidden; color: #705446; }
+.font-eng { font-family: 'Fredoka', sans-serif; }
+.shape-header { border-radius: 40px 100px 100px 40px; position: relative; }
+.shape-info { border-radius: 20px; }
+.shape-bubble-left { border-radius: 20px; position: relative; }
+.shape-bubble-left::after { content: ''; position: absolute; right: -15px; top: 50%; transform: translateY(-50%); border-width: 15px 0 15px 20px; border-color: transparent transparent transparent #ff85a2; }
+.shape-nota { border-radius: 20px; position: relative; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ffccd5; border-radius: 10px; }
+.modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+.modal.active { opacity: 1; visibility: visible; }
+.modal.inactive { opacity: 0; visibility: hidden; }
+.modal-content { transition: transform 0.3s ease; transform: scale(0.95); }
+.modal.active .modal-content { transform: scale(1); }
+.bg-shapes { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; overflow: hidden; }
+@keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.instagram-link-btn { display: none !important; }
+#music-toggle-btn { display: none !important; }
+input[type="file"]::file-selector-button { border: none !important; outline: none !important; }
+.admin-tab-btn { background: transparent; color: #705446; }
+.admin-tab-btn.active { background: #ff85a2; color: #ffffff; box-shadow: 0 4px 10px 2px rgba(255, 133, 162, 0.5); }
+.order-note-tag { display: inline-flex; align-items: center; gap: 4px; background: #fff3c4; color: #705446; border: 1px solid rgba(255, 133, 162, 0.35); border-radius: 999px; padding: 2px 8px; font-size: 10px; font-weight: 600; }
+</style>
+</head>
+<body class="antialiased relative selection:bg-pj-yellow-main selection:text-pj-blue-dark">
+<!-- Audio Player Hidden Element (YouTube Iframe with Loop API) -->
+<iframe id="bg-music-iframe" style="display:none;" width="560" height="315"
+src="https://www.youtube.com/embed/BX7z7AvTCNw?enablejsapi=1&loop=1&playlist=BX7z7AvTCNw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- Floating Music Toggle Button -->
+<button id="music-toggle-btn" onclick="toggleMusic()" class="fixed top-4 left-4 z-50 bg-pj-white border-2 border-pj-pink p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 flex items-center justify-center text-pj-pink group" title="เปิด/ปิด เพลง">
+<svg id="music-icon" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+<span id="music-status-dot" class="absolute top-0.5 right-0.5 w-2 h-2 bg-gray-400 rounded-full border border-white"></span>
+</button>
+
+<!-- Admin Panel Floating Button -->
+<button onclick="openAdminAuthModal()" class="fixed top-4 left-4 z-50 bg-pj-pink text-pj-white p-2.5 sm:p-3 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 flex items-center gap-1.5 text-xs font-bold border-2 border-pj-white">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+<span>หลังบ้าน</span>
+</button>
+
+<!-- Background Decors -->
+<div class="bg-shapes">
+<svg class="absolute top-10 -left-10 w-64 h-64 text-pj-blue-light opacity-50" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.3,-46.3C90.8,-33.5,96.8,-18,95.5,-2.9C94.2,12.2,85.6,26.9,75.3,39.6C65,52.3,53,63.1,39.4,70.5C25.8,77.9,10.6,81.9,-4.3,81.4C-19.2,80.9,-33.7,75.9,-47.5,68.4C-61.3,60.9,-74.3,50.9,-82.4,37.6C-90.5,24.3,-93.7,7.7,-91.4,-8.2C-89.1,-24.1,-81.3,-39.3,-69.9,-51.1C-58.5,-62.9,-43.5,-71.3,-29.1,-75.7C-14.7,-80.1,-1.2,-80.5,12.5,-78.9C26.2,-77.3,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100) scale(1.1)" /></svg>
+<svg class="absolute top-[40%] right-[-50px] w-72 h-72 text-pj-yellow-light opacity-60" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M51.8,-70.5C65.5,-60.8,73.9,-43.8,77.9,-26.8C81.9,-9.8,81.5,7.2,74.9,21.8C68.3,36.4,55.5,48.6,41.2,57.1C26.9,65.6,11.1,70.4,-4.1,76.3C-19.3,82.2,-33.9,89.2,-46.9,82.9C-59.9,76.6,-71.3,57,-76.3,38.2C-81.3,19.4,-79.9,1.4,-73.4,-14.2C-66.9,-29.8,-55.3,-43,-41.8,-52.5C-28.3,-62,-14.1,-67.8,1.5,-70.1C17.1,-72.4,38.1,-80.2,51.8,-70.5Z" transform="translate(100 100)" /></svg>
+<svg class="absolute top-[20%] left-[10%] w-12 h-12 text-pj-pink opacity-40 animate-pulse" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<svg class="absolute bottom-[25%] left-[-30px] w-48 h-48 text-pj-blue-main opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M42.7,-73.4C55.9,-65.7,67.7,-54.6,76.5,-41.2C85.3,-27.8,91.1,-12.1,89.5,2.9C87.9,17.9,78.9,32.2,68.2,44.1C57.5,56,45.1,65.4,31.4,71.5C17.7,77.6,2.7,80.4,-11.9,79.5C-26.5,78.6,-40.7,74,-53.1,65.6C-65.5,57.2,-76.1,45,-81.6,30.6C-87.1,16.2,-87.5,-0.4,-82.6,-15.5C-77.7,-30.6,-67.5,-44.2,-54.6,-52.3C-41.7,-60.4,-26.1,-63,-11.5,-63.9C3.1,-64.8,17.7,-64,29.5,-71.1C41.3,-78.2,50.3,-83.2,42.7,-73.4Z" transform="translate(100 100)"/></svg>
+<svg class="absolute bottom-[10%] right-[5%] w-16 h-16 text-pj-yellow-main opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+</div>
+
+<main class="max-w-[500px] mx-auto min-h-screen px-4 py-12 relative z-10 flex flex-col gap-8">
+<!-- Header Section -->
+<section class="relative">
+<div class="absolute -right-4 top-[80%] w-12 h-32 border-r-4 border-b-4 border-pj-blue-light rounded-br-[40px] z-0"></div>
+<div class="shape-header bg-pj-blue-light p-8 pr-16 shadow-soft z-10 relative mt-4 ml-[-20px] mr-4">
+<div class="absolute -top-10 -right-4 z-30 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+<svg class="absolute -top-4 -left-5 w-12 h-12 text-pj-yellow-main drop-shadow-md z-40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="w-32 h-36 bg-pj-white p-2.5 pb-8 rounded shadow-lg border border-pj-blue-light/50 flex flex-col items-center relative">
+<div class="w-full h-full bg-pj-blue-light/20 overflow-hidden rounded-sm">
+<img id="site-logo-img" src="https://placehold.co/150x150/ffb3c6/ffffff?text=Miori" alt="โลโก้" class="w-full h-full object-cover">
+</div>
+</div>
+</div>
+<svg class="absolute top-8 right-20 w-5 h-5 text-pj-yellow-main opacity-90" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<svg class="absolute bottom-4 right-12 w-6 h-6 text-pj-white opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><circle cx="12" cy="12" r="10"/></svg>
+<svg class="absolute top-6 left-6 w-4 h-4 text-pj-white opacity-80" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+<h1 class="font-eng text-5xl text-pj-white font-bold tracking-wide drop-shadow-md mb-2 relative z-10">Miori<br><span class="text-3xl ml-4">Shop</span></h1>
+<div class="inline-flex items-center gap-2 bg-pj-yellow-main text-pj-blue-dark font-eng font-bold px-3 py-1 rounded-full text-xs shadow-md mt-2 relative z-10 border border-pj-white">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+<span>OPEN 10:00 a.m - Close 22:00 p.m</span>
+</div>
+<br>
+<div class="inline-block bg-pj-blue-dark text-pj-white font-eng px-4 py-1.5 rounded-full text-sm mt-2 shadow-md relative z-10">
+Welcome to my shop
+</div>
+</div>
+<p class="mt-6 ml-6 text-sm font-medium pr-4 relative z-10">
+ร้านมิรับทํา ป้าย ลายน้ำ เริ่มต้น 39.-
+</p>
+</section>
+
+<!-- Banner Section (ขนาด 1122*495) -->
+<section class="mx-4 relative">
+<div class="bg-pj-white p-2 rounded-3xl shadow-soft border-2 border-pj-blue-light overflow-hidden">
+<div class="relative w-full rounded-2xl overflow-hidden aspect-[1122/495] bg-pj-blue-light/20">
+<img id="site-banner-img" src="https://placehold.co/1122x495/ffccd5/705446?text=Miori+Shop+Banner" alt="แบรนเนอร์" class="w-full h-full object-cover">
+</div>
+</div>
+</section>
+
+<!-- ปุ่มเช็คคิวงาน -->
+<section class="mx-4 relative">
+<button onclick="openModal('modal-queue-view')" class="w-full bg-gradient-to-r from-pj-pink via-pj-yellow-main to-pj-blue-light p-1 rounded-3xl shadow-soft hover:scale-[1.02] transition-transform duration-300">
+<div class="bg-pj-white rounded-[22px] px-6 py-4 flex items-center justify-between border border-white">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-pj-yellow-light flex items-center justify-center text-pj-blue-dark shadow-sm shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+</div>
+<div class="text-left">
+<h3 class="font-eng text-lg font-bold text-pj-blue-dark leading-tight">Check Order Queue</h3>
+<p class="text-xs text-pj-blue-dark/70 font-medium">กดตรงนี้เพื่อเช็คสถานะและคิวงานของคุณ</p>
+</div>
+</div>
+<div class="bg-pj-blue-dark text-pj-white p-2 rounded-full shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
+</div>
+</div>
+</button>
+</section>
+
+<!-- Product Cards (3 ช่อง) -->
+<section class="mx-4">
+<div class="flex items-center gap-2 mb-3">
+<svg class="w-5 h-5 text-pj-pink" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<h3 class="font-eng text-lg font-bold text-pj-blue-dark">Featured Products</h3>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<a id="prod-link-1" href="https://drive.google.com/drive/folders/10wVjpHKCr8rMZ-UoCd5G_ALc13AUC1Qk" target="_blank" class="bg-pj-white p-2 rounded-2xl border-2 border-pj-pink/50 shadow-sm flex flex-col items-center hover:scale-105 transition-transform">
+<div class="w-full aspect-square rounded-xl overflow-hidden bg-pj-pink/20 mb-2 border border-pj-pink/30">
+<img id="prod-img-1" src="https://placehold.co/1280x1280/ffb3c6/ffffff?text=Block" alt="Block" class="w-full h-full object-cover">
+</div>
+<span class="w-full bg-pj-pink text-pj-white text-center py-1.5 rounded-xl text-xs font-bold font-eng">Block</span>
+</a>
+<a id="prod-link-2" href="https://drive.google.com/drive/folders/1T36yZKLHN5huKfwu1NYW_PVLLsswHTiD" target="_blank" class="bg-pj-white p-2 rounded-2xl border-2 border-pj-yellow-main shadow-sm flex flex-col items-center hover:scale-105 transition-transform">
+<div class="w-full aspect-square rounded-xl overflow-hidden bg-pj-yellow-light/50 mb-2 border border-pj-yellow-main/30">
+<img id="prod-img-2" src="https://placehold.co/1280x1280/ffe066/705446?text=Toon" alt="Toon" class="w-full h-full object-cover">
+</div>
+<span class="w-full bg-pj-yellow-main text-pj-blue-dark text-center py-1.5 rounded-xl text-xs font-bold font-eng">Toon</span>
+</a>
+<a id="prod-link-3" href="https://drive.google.com/drive/folders/1YLsW06GXE_ENus4ad8AUNU4FEM74Z2vl" target="_blank" class="bg-pj-white p-2 rounded-2xl border-2 border-pj-blue-light shadow-sm flex flex-col items-center hover:scale-105 transition-transform">
+<div class="w-full aspect-square rounded-xl overflow-hidden bg-pj-blue-light/30 mb-2 border border-pj-blue-light/30">
+<img id="prod-img-3" src="https://placehold.co/1280x1280/ffccd5/705446?text=Descor" alt="Descor" class="w-full h-full object-cover">
+</div>
+<span class="w-full bg-pj-blue-light text-pj-blue-dark text-center py-1.5 rounded-xl text-xs font-bold font-eng">Descor</span>
+</a>
+</div>
+</section>
+
+<!-- Portfolio Section -->
+<section class="relative mr-8 mt-4">
+<svg class="absolute -right-6 -bottom-4 w-10 h-10 text-pj-yellow-main opacity-80 z-20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<svg class="absolute top-2 right-2 w-4 h-4 text-pj-blue-light opacity-50 z-0" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+<div class="absolute -left-6 top-[20%] w-6 h-full border-l-4 border-t-4 border-pj-pink rounded-tl-[40px] z-0 opacity-60"></div>
+<div class="shape-bubble-left bg-pj-blue-main p-5 shadow-soft z-10 text-pj-white">
+<svg class="absolute top-4 right-4 w-6 h-6 text-pj-yellow-main opacity-90 transform rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<svg class="absolute bottom-2 left-6 w-4 h-4 text-pj-white opacity-40 transform -rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="flex items-center gap-2 mb-3">
+<h2 class="font-eng text-2xl font-bold tracking-wide">Portfolio</h2>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+</div>
+<p class="text-sm mb-4">ตัวอย่างงานร้าน miori คลิกดูหมวดหมู่เพื่อดูตัวอย่างงานได้เลยนะคะ</p>
+<div class="flex flex-col gap-2">
+<a href="https://drive.google.com/drive/folders/1qTde2_bAUL_qgsYfFlTgKC8TbHwmgtQe" target="_blank" class="bg-pj-white text-pj-blue-dark py-2 px-4 rounded-full text-sm font-semibold flex justify-between items-center hover:bg-pj-yellow-light transition-colors">หมวดหมู่: ลายน้ำ<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></a>
+<a href="https://drive.google.com/drive/folders/1UTDDPZxwmZ9Bxld-wkRuboXRBQwRbe7g" target="_blank" class="bg-pj-white text-pj-blue-dark py-2 px-4 rounded-full text-sm font-semibold flex justify-between items-center hover:bg-pj-yellow-light transition-colors">หมวดหมู่: ป้ายแนวน่ารัก<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></a>
+<a href="https://drive.google.com/drive/folders/1Of_4oKv6n32tAccEwbe09IyeKAAIdcAk" target="_blank" class="bg-pj-white text-pj-blue-dark py-2 px-4 rounded-full text-sm font-semibold flex justify-between items-center hover:bg-pj-yellow-light transition-colors">หมวดหมู่: ป้ายแนวสว่าง<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></a>
+<a href="https://drive.google.com/drive/folders/1Bg8M3w0HpGnXAGAb8At4PkxMNawNCzJg" target="_blank" class="bg-pj-white text-pj-blue-dark py-2 px-4 rounded-full text-sm font-semibold flex justify-between items-center hover:bg-pj-yellow-light transition-colors">หมวดหมู่: ป้ายแนวมืด<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></a>
+<a href="https://drive.google.com/drive/folders/1AWD8J5JtZBSIQsgMHzVazxVKgum0810C" target="_blank" class="bg-pj-white text-pj-blue-dark py-2 px-4 rounded-full text-sm font-semibold flex justify-between items-center hover:bg-pj-yellow-light transition-colors">หมวดหมู่: ป้ายเรทราคา<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></a>
+</div>
+</div>
+</section>
+
+<!-- Pricing & Add-ons Section -->
+<section class="ml-4 mr-4 mt-2 relative">
+<svg class="absolute -right-2 top-32 w-12 h-12 text-pj-blue-light opacity-50 z-0" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="4" transform="rotate(15 12 12)"/></svg>
+<svg class="absolute -left-2 bottom-10 w-8 h-8 text-pj-pink opacity-40 z-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+<div class="bg-pj-white rounded-[30px] p-1 shadow-soft border border-pj-pink/40 relative z-10">
+<svg class="absolute -top-4 right-10 w-8 h-8 text-pj-yellow-main z-20 drop-shadow-sm transform rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="bg-pj-yellow-light/40 rounded-[26px] p-5">
+<div class="text-center mb-4">
+<div class="inline-flex bg-pj-yellow-main text-pj-blue-dark font-eng font-bold px-5 py-1.5 rounded-full mb-2 shadow-sm">Pricing</div>
+<h3 class="text-xl font-bold">ราคาเริ่มต้น 39.-</h3>
+<p class="text-xs text-pj-blue-dark/70">(สำหรับลายน้ำแนวน่ารัก ไว้ใส่ในตัวอย่างงานเท่านั้น)</p>
+</div>
+<div class="space-y-3 text-sm">
+<div class="bg-pj-white p-3 rounded-xl shadow-sm border border-pj-white">
+<p class="font-semibold text-pj-blue-main mb-1">เรทราคาต่างๆ</p>
+<ul class="text-xs space-y-1">
+<li class="flex justify-between items-center"><span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ป้ายแนวน่ารัก</span> <span class="font-bold">เริ่มต้น 59.-</span></li>
+<li class="flex justify-between items-center"><span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ป้ายแนวสว่าง</span> <span class="font-bold">เริ่มต้น 89.-</span></li>
+<li class="flex justify-between items-center"><span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ป้ายแนวมืด</span> <span class="font-bold">เริ่มต้น 89.-</span></li>
+<li class="flex justify-between items-center"><span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ป้ายเรทราคา</span> <span class="font-bold">เริ่มต้น 99.-</span></li>
+</ul>
+</div>
+<div class="flex items-center justify-between bg-pj-white p-3 rounded-xl shadow-sm border border-pj-white">
+<span class="font-medium text-xs">Add on มีราคาเหมา 3 ป้ายขึ้นไป</span>
+<span class="font-bold text-pj-blue-main">พิเศษ</span>
+</div>
+<div class="bg-pj-pink/20 p-3 rounded-xl text-xs space-y-1">
+<p class="font-semibold text-pj-blue-dark flex items-center gap-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> แก้ไขข้อมูลหลังส่งตรวจสอบ ฟรี 1 ครั้ง</p>
+<p class="text-pj-blue-dark/80 pl-5">หลังส่งลิงก์งานแล้ว หากมีการแก้ไขเพิ่มเติม:</p>
+<ul class="pl-5">
+<li>- คิดค่าปรับแก้จุดละ 10.- (ข้อความ)</li>
+<li>- เปลี่ยนฟอนต์หัวป้าย 39.-</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<p class="text-[10px] text-center mt-3 text-pj-blue-dark/60 px-4">
+หมายเหตุ: ราคาขึ้นอยู่กับความละเอียดของข้อมูลและปริมาณเนื้อหา ทางร้านขอสงวนสิทธิ์ในการประเมินราคาตามความเหมาะสมนะคะ
+</p>
+</section>
+
+<!-- Process & Rules -->
+<section class="mx-4 space-y-4">
+<div class="shape-nota bg-pj-white border-2 border-pj-pink p-5 shadow-sm">
+<svg class="absolute -top-3 -right-2 w-7 h-7 text-pj-pink z-10 drop-shadow-sm transform rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-eng text-xl font-bold text-pj-blue-main uppercase">Process & Conditions</h3>
+<p class="text-xs font-medium text-pj-blue-dark/70">ขั้นตอนและเงื่อนไข</p>
+</div>
+<div class="bg-pj-yellow-light text-pj-blue-dark px-2 py-1 rounded-lg">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+</div>
+</div>
+<ul class="text-xs space-y-2 pl-4 list-disc marker:text-pj-blue-main">
+<li>ตามปกติรองาน 4-8 ชั่วโมง แล้วแต่คิวของวันนั้น ๆ</li>
+<li><span class="font-bold text-pj-blue-main">งานเร่ง *2 ของราคา</span></li>
+<li>แจ้งรายละเอียดงานให้ครบก่อนเริ่มงาน</li>
+<li>เน้นย้ำหลังจากส่งงานให้รีเช็ค ตอบกลับภายในไม่เกิน 30 นาที</li>
+<li>หากส่งงานเรียบร้อยแล้ว ลูกค้าต้องการปรับเปลี่ยนงาน ต้องสั่งใหม่เท่านั้น</li>
+<li>หากทางร้านทำผิดบรีฟจะทำการแก้ไขให้ฟรี</li>
+<li>ห้ามนำไฟล์งานหรือองค์ประกอบภายในงานไปแจกต่อ ขายต่อ หรือส่งต่อให้บุคคลอื่นโดยไม่ได้รับอนุญาต</li>
+<li>การสั่งงานถือว่ายอมรับเงื่อนไขของร้านแล้ว กรุณาอ่านรายละเอียดให้ครบก่อนสั่งงานนะคะ</li>
+</ul>
+<h4 class="font-bold text-sm mt-4 mb-2 bg-pj-yellow-light inline-block px-2 py-0.5 rounded text-pj-blue-dark">ขั้นตอนการสั่งงาน</h4>
+<ol class="text-xs space-y-2 pl-4 list-decimal marker:text-pj-blue-main marker:font-bold">
+<li>บอกประเภทงานที่ต้องการทำ เช่น ป้ายบัญชี ริชเมนู เป็นต้น</li>
+<li>บอกจำนวนงาน</li>
+<li>เลือกบล็อก ฟอนต์ ตูน ของตกแต่งในลิงก์ (ลิงก์ที่ไว้เลือกของต่าง ๆ) ได้เลย</li>
+<li>แจ้งรายละเอียดคำให้ชัดเจน ส่งเป็นแบบข้อความเท่านั้น รบกวนตรวจสอบข้อความก่อนน้า</li>
+<li>รอทางร้านรวมยอดและรอคอนเฟิร์มคิวงาน</li>
+</ol>
+<div class="mt-3 bg-pj-yellow-light/60 p-2 rounded text-[10px] text-pj-blue-dark/80">
+<span class="font-bold">หมายเหตุ:</span> ลูกค้าต้องการอะไรพิมพ์บอกให้ชัดเจน เพราะทางร้านจะทำตามข้อความบรีฟที่ลูกค้าแจ้งมา
+</div>
+</div>
+
+<div class="shape-nota bg-pj-blue-dark text-pj-white p-5 shadow-sm overflow-hidden">
+<svg class="absolute -bottom-4 -left-4 w-16 h-16 text-pj-blue-light opacity-10 transform -rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<svg class="absolute top-4 right-4 w-5 h-5 text-pj-yellow-main opacity-80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="flex items-center gap-2 mb-3 border-b border-pj-white/20 pb-2">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<h3 class="font-eng text-lg font-bold uppercase tracking-widest">Rules</h3>
+</div>
+<ul class="text-xs space-y-2 font-light">
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> โอนเงินแล้วไม่คืนเงินทุกกรณีไม่ว่าจะราคาเริ่มต้น หรือจ่ายเต็มแล้ว</li>
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ยกเลิกหลังตรวจงานแล้ว ไม่คืนเงินและส่งงานให้ตามปกติ</li>
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ทางร้านไม่รับทำตามแบบของงานร้านอื่น</li>
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> งดตัดป้ายร้านอื่นมาทำกับร้านเค้า</li>
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> งดจิก งดเร่งทุกกรณีนะคะ</li>
+<li class="flex items-start gap-2"><svg class="w-3 h-3 mt-0.5 shrink-0 text-pj-yellow-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> สำคัญ: งดนำป้ายไปขาย แจก ดัดแปลง หรือเจน หรือเข้าระบบ Ai เพราะงานทุกชิ้นมีลิขสิทธิ์ หากตรวจพบการละเมิด ทางร้านขอดำเนินคดีตามกฎหมาย</li>
+</ul>
+</div>
+</section>
+
+<!-- ระบบรีวิวร้านค้า -->
+<section class="mx-4 relative">
+<div class="bg-pj-white border-2 border-pj-pink rounded-[24px] p-5 shadow-soft relative">
+<svg class="absolute -top-3 right-4 w-7 h-7 text-pj-pink z-10 drop-shadow-sm transform rotate-12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-pj-pink/20 flex items-center justify-center text-pj-pink">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+</div>
+<h3 class="font-eng text-xl font-bold text-pj-pink">Store Reviews</h3>
+</div>
+<button onclick="openReviewModal()" class="bg-pj-pink text-pj-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-pj-pink/80 transition flex items-center gap-1 shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+<span>เขียนรีวิว</span>
+</button>
+</div>
+<div id="reviews-display-list" class="space-y-3 max-h-72 overflow-y-auto pr-1">
+<!-- Approved reviews dynamically loaded -->
+</div>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section class="mt-8 mb-12 flex flex-col items-center">
+<h2 class="font-eng text-xl font-bold text-pj-blue-main mb-4 flex items-center gap-2">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+Contact
+</h2>
+<div class="flex gap-4">
+<a id="contact-facebook-link" href="https://www.facebook.com/profile.php?id=61591413135110" target="_blank" class="w-12 h-12 bg-pj-white border-2 border-pj-pink rounded-full flex items-center justify-center text-pj-blue-main hover:bg-pj-pink hover:text-pj-white transition-colors shadow-sm">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+</a>
+<a id="contact-line-link" href="https://lin.ee/XkF46in" target="_blank" class="w-12 h-12 bg-pj-white border-2 border-pj-pink rounded-full flex items-center justify-center text-pj-blue-main hover:bg-pj-pink hover:text-pj-white transition-colors shadow-sm">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</a>
+<a id="contact-instagram-link" href="https://www.instagram.com/pinkjulie.land" target="_blank" class="instagram-link-btn w-12 h-12 bg-pj-white border-2 border-pj-pink rounded-full flex items-center justify-center text-pj-blue-main hover:bg-pj-pink hover:text-pj-white transition-colors shadow-sm">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+</a>
+</div>
+<p class="text-xs font-semibold text-pj-blue-dark/60 mt-6">ขอบคุณที่ไว้วางใจ Miori Shop</p>
+</section>
+</main>
+
+<!-- Modal: เช็คคิวงานลูกค้า -->
+<div id="modal-queue-view" class="modal inactive fixed inset-0 z-50 flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-pj-blue-dark/40 backdrop-blur-sm" onclick="closeModal('modal-queue-view')"></div>
+<div class="modal-content relative bg-pj-white w-full max-w-sm rounded-[30px] p-6 shadow-xl border-4 border-pj-pink">
+<button onclick="closeModal('modal-queue-view')" class="absolute top-4 right-4 text-pj-blue-main hover:text-pj-pink">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+<div class="flex items-center gap-2 mb-3">
+<div class="w-8 h-8 rounded-full bg-pj-pink/20 flex items-center justify-center text-pj-blue-dark">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+</div>
+<h3 class="font-eng text-xl font-bold text-pj-blue-main">Order Status</h3>
+</div>
+<div class="mb-4 relative">
+<input type="text" id="queue-search-input" onkeyup="searchQueue()" placeholder="พิมพ์ชื่อของคุณเพื่อเช็คคิว..." class="w-full bg-pj-bg border-2 border-pj-pink/40 rounded-2xl px-4 py-2 text-xs focus:outline-none focus:border-pj-blue-main text-pj-blue-dark pl-9">
+<svg class="w-4 h-4 text-pj-blue-main absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+</div>
+<div class="grid grid-cols-5 gap-1 text-[9px] font-bold text-center mb-4 bg-pj-bg p-2 rounded-xl border border-pj-pink/30">
+<div class="text-gray-500">0%<br><span class="font-normal text-[8px]">รอบรีพ</span></div>
+<div class="text-pink-400">25%<br><span class="font-normal text-[8px]">บรีพแล้ว</span></div>
+<div class="text-yellow-600">50%<br><span class="font-normal text-[8px]">กำลังทํา</span></div>
+<div class="text-pink-600">75%<br><span class="font-normal text-[8px]">รอเช็ค</span></div>
+<div class="text-green-600">100%<br><span class="font-normal text-[8px]">ส่งแล้ว</span></div>
+</div>
+<div id="queue-list-container" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+<!-- Dynamic loaded -->
+</div>
+</div>
+</div>
+
+<!-- Modal: ลูกค้าเขียนรีวิว -->
+<div id="modal-review-form" class="modal inactive fixed inset-0 z-50 flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-pj-blue-dark/40 backdrop-blur-sm" onclick="closeModal('modal-review-form')"></div>
+<div class="modal-content relative bg-pj-white w-full max-w-sm rounded-[30px] p-6 shadow-xl border-4 border-pj-pink">
+<button onclick="closeModal('modal-review-form')" class="absolute top-4 right-4 text-pj-pink hover:opacity-70">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+<h3 class="font-eng text-xl font-bold text-pj-pink mb-1">Add Review</h3>
+<p class="text-xs text-pj-blue-dark/70 mb-4">เขียนรีวิวความประทับใจบริการของเรา</p>
+<form onsubmit="handleReviewSubmit(event)" class="space-y-3">
+<div>
+<label class="block text-xs font-bold mb-1">ชื่อลูกค้า/ชื่อร้าน *</label>
+<input type="text" id="review-name" required placeholder="เช่น คุณมินิ" class="w-full border-2 border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-pj-pink">
+</div>
+<div>
+<label class="block text-xs font-bold mb-1">ข้อความรีวิว *</label>
+<textarea id="review-text" required rows="3" placeholder="ประทับใจงานมากๆ ทำไว ตรงสเปก..." class="w-full border-2 border-pj-pink/40 rounded-xl p-3 text-xs focus:outline-none focus:border-pj-pink"></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold mb-1">แนบรูปหลักฐานการซื้อขาย (รูปโปรไฟล์) *</label>
+<input type="file" id="review-proof-file" accept="image/*" required class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-pj-pink/20 file:text-pj-pink hover:file:bg-pj-pink/30">
+</div>
+<button type="submit" class="w-full bg-pj-pink text-pj-white font-bold py-2 rounded-xl text-xs hover:bg-pj-pink/80 transition shadow-sm mt-2">ส่งรีวิวให้แอดมินตรวจสอบ</button>
+</form>
+</div>
+</div>
+
+<!-- Modal: รหัสผ่านเข้าหลังบ้าน Admin -->
+<div id="modal-admin-auth" class="modal inactive fixed inset-0 z-50 flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-pj-blue-dark/50 backdrop-blur-sm" onclick="closeModal('modal-admin-auth')"></div>
+<div class="modal-content relative bg-pj-white w-full max-w-xs rounded-[24px] p-6 shadow-xl border-4 border-pj-pink text-center">
+<button onclick="closeModal('modal-admin-auth')" class="absolute top-3 right-3 bg-pj-pink text-pj-white p-1.5 rounded-full hover:bg-pj-blue-main hover:scale-110 transition-all z-20 shadow-md">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+<h3 class="font-eng text-lg font-bold text-pj-pink mb-1">Admin Login</h3>
+<p class="text-xs text-gray-500 mb-4">เข้าสู่ระบบหลังบ้านสำหรับแอดมิน</p>
+<div class="space-y-2 mb-3 text-left">
+<div>
+<label class="block text-[10px] font-bold text-pj-blue-dark mb-0.5">กรอกอีเมล</label>
+<input type="email" id="admin-email-input" value="" placeholder="กรอกอีเมล" class="w-full border-2 border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-pj-pink bg-pj-bg/60">
+</div>
+<div>
+<label class="block text-[10px] font-bold text-pj-blue-dark mb-0.5">รหัสผ่าน</label>
+<input type="password" id="admin-pass-input" value="" placeholder="กรอกรหัสผ่าน" class="w-full border-2 border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-pj-pink">
+</div>
+</div>
+<button onclick="checkAdminLogin()" class="w-full bg-pj-pink text-white font-bold py-2 rounded-xl text-xs hover:bg-pj-blue-main transition shadow-md">เข้าสู่ระบบ</button>
+</div>
+</div>
+
+<!-- Modal: ระบบหลังบ้าน Admin Panel -->
+<div id="modal-admin-panel" class="modal inactive fixed inset-0 z-50 flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-pj-blue-dark/40 backdrop-blur-sm" onclick="closeModal('modal-admin-panel')"></div>
+<div class="modal-content relative bg-pj-bg w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-[32px] p-6 shadow-2xl border-4 border-pj-pink">
+<button onclick="closeModal('modal-admin-panel')" class="absolute top-4 right-4 bg-pj-pink text-pj-white p-1.5 rounded-full hover:bg-pj-blue-main hover:scale-110 transition-all z-20 shadow-md">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+<div class="flex items-center gap-3 mb-2 border-b-2 border-pj-pink/30 pb-3">
+<div class="w-10 h-10 rounded-2xl bg-pj-pink text-white flex items-center justify-center shadow-md">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+</div>
+<div>
+<h2 class="font-eng text-2xl font-bold text-pj-blue-dark">Admin Dashboard</h2>
+<p class="text-xs text-pj-blue-dark/70 font-medium">จัดการระบบหลังบ้านร้าน Miori Shop ✨</p>
+</div>
+</div>
+<!-- แท็บหลังบ้าน (เหลือ 2 แท็บ: แก้ไขข้อมูลร้าน / เช็คคิว) -->
+<div class="grid grid-cols-2 gap-1.5 mt-4 mb-1 bg-pj-white/60 p-1.5 rounded-2xl border border-pj-pink/30">
+<button id="admin-tab-btn-1" onclick="switchAdminTab('admin-tab-1')" class="hidden admin-tab-btn font-eng text-[11px] font-bold py-2 rounded-xl transition-all">ระบบหลังบ้าน</button>
+<button id="admin-tab-btn-2" onclick="switchAdminTab('admin-tab-2')" class="admin-tab-btn font-eng text-[11px] font-bold py-2 rounded-xl transition-all">แก้ไขข้อมูลร้าน</button>
+<button id="admin-tab-btn-3" onclick="switchAdminTab('admin-tab-3')" class="admin-tab-btn font-eng text-[11px] font-bold py-2 rounded-xl transition-all">เช็คคิว</button>
+</div>
+
+<!-- หน้าเดิม (จัดการรูปภาพ) - ซ่อนไว้ ไม่ลบ -->
+<div id="admin-tab-1" class="admin-tab-page space-y-5 mt-4 hidden">
+<div class="bg-pj-white p-4 rounded-2xl border-2 border-pj-pink/40 shadow-sm">
+<h3 class="font-bold text-sm text-pj-blue-dark mb-3 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pj-pink inline-block"></span>จัดการรูปภาพร้านค้า</h3>
+<div class="space-y-3 text-xs">
+<div class="bg-pj-bg p-3 rounded-xl border border-pj-pink/30 space-y-1.5">
+<label class="block font-bold text-pj-blue-dark">1. รูปโลโก้ (โพลารอยด์):</label>
+<input type="file" id="file-input-logo" accept="image/*" onchange="previewImage(event, 'preview-logo')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-pj-pink/20 file:text-pj-blue-dark hover:file:bg-pj-pink">
+<img id="preview-logo" class="w-16 h-16 object-cover rounded-lg border hidden mt-1">
+</div>
+<div class="bg-pj-bg p-3 rounded-xl border border-pj-pink/30 space-y-1.5">
+<label class="block font-bold text-pj-blue-dark">2. รูปแบนเนอร์ (1122x495):</label>
+<input type="file" id="file-input-banner" accept="image/*" onchange="previewImage(event, 'preview-banner')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-pj-pink/20 file:text-pj-blue-dark hover:file:bg-pj-pink">
+<img id="preview-banner" class="w-32 h-14 object-cover rounded-lg border hidden mt-1">
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+<div class="bg-pj-bg p-2.5 rounded-xl border border-pj-pink/30 space-y-1">
+<label class="block font-bold text-pj-blue-dark text-[11px]">3. รูป Block:</label>
+<input type="file" id="file-input-prod1" accept="image/*" onchange="previewImage(event, 'preview-prod1')" class="w-full text-[10px] text-gray-500 file:mr-1 file:py-0.5 file:px-2 file:rounded-full file:border-0 file:bg-pj-pink/20 file:text-pj-blue-dark hover:file:bg-pj-pink">
+<img id="preview-prod1" class="w-12 h-12 object-cover rounded-lg border hidden mt-1">
+</div>
+<div class="bg-pj-bg p-2.5 rounded-xl border border-pj-pink/30 space-y-1">
+<label class="block font-bold text-pj-blue-dark text-[11px]">4. รูป Toon:</label>
+<input type="file" id="file-input-prod2" accept="image/*" onchange="previewImage(event, 'preview-prod2')" class="w-full text-[10px] text-gray-500 file:mr-1 file:py-0.5 file:px-2 file:rounded-full file:border-0 file:bg-pj-pink/20 file:text-pj-blue-dark hover:file:bg-pj-pink">
+<img id="preview-prod2" class="w-12 h-12 object-cover rounded-lg border hidden mt-1">
+</div>
+<div class="bg-pj-bg p-2.5 rounded-xl border border-pj-pink/30 space-y-1">
+<label class="block font-bold text-pj-blue-dark text-[11px]">5. รูป Descor:</label>
+<input type="file" id="file-input-prod3" accept="image/*" onchange="previewImage(event, 'preview-prod3')" class="w-full text-[10px] text-gray-500 file:mr-1 file:py-0.5 file:px-2 file:rounded-full file:border-0 file:bg-pj-pink/20 file:text-pj-blue-dark hover:file:bg-pj-pink">
+<img id="preview-prod3" class="w-12 h-12 object-cover rounded-lg border hidden mt-1">
+</div>
+</div>
+<button onclick="saveAllImageChanges()" class="w-full bg-pj-pink text-pj-white font-bold py-2.5 rounded-xl text-xs hover:bg-pj-blue-main transition shadow-md mt-3 flex items-center justify-center gap-1">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+<span>บันทึกการเปลี่ยนรูปภาพทั้งหมด</span>
+</button>
+</div>
+</div>
+</div>
+
+<!-- หน้าที่ 2: แก้ไขข้อมูลร้าน (ลิงก์ + อนุมัติรีวิว + เปลี่ยนรหัสผ่าน) -->
+<div id="admin-tab-2" class="admin-tab-page space-y-5 mt-4">
+<div class="bg-pj-white p-4 rounded-2xl border-2 border-pj-pink/40 shadow-sm">
+<h3 class="font-bold text-sm text-pj-blue-dark mb-3 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pj-yellow-main inline-block"></span>แก้ไขลิงก์ช่องทางติดต่อ & Google Drive</h3>
+<div class="space-y-2 text-xs">
+<div class="grid grid-cols-2 gap-2">
+<div>
+<label class="block font-bold text-pj-blue-dark mb-1">ลิงก์ Facebook</label>
+<input type="text" id="link-facebook-input" placeholder="https://facebook.com/..." class="w-full border border-pj-pink/40 rounded-xl px-2.5 py-1.5 bg-pj-bg">
+</div>
+<div>
+<label class="block font-bold text-pj-blue-dark mb-1">ลิงก์ Line</label>
+<input type="text" id="link-line-input" placeholder="https://lin.ee/..." class="w-full border border-pj-pink/40 rounded-xl px-2.5 py-1.5 bg-pj-bg">
+</div>
+</div>
+<div class="pt-2 border-t border-pj-pink/20 space-y-2">
+<div>
+<label class="block font-bold text-pj-blue-dark mb-1">ลิงก์ Google Drive - ช่อง 1 (Block)</label>
+<input type="text" id="link-drive-block-input" placeholder="https://drive.google.com/..." class="w-full border border-pj-pink/40 rounded-xl px-2.5 py-1.5 bg-pj-bg">
+</div>
+<div>
+<label class="block font-bold text-pj-blue-dark mb-1">ลิงก์ Google Drive - ช่อง 2 (Toon)</label>
+<input type="text" id="link-drive-toon-input" placeholder="https://drive.google.com/..." class="w-full border border-pj-pink/40 rounded-xl px-2.5 py-1.5 bg-pj-bg">
+</div>
+<div>
+<label class="block font-bold text-pj-blue-dark mb-1">ลิงก์ Google Drive - ช่อง 3 (Descor)</label>
+<input type="text" id="link-drive-descor-input" placeholder="https://drive.google.com/..." class="w-full border border-pj-pink/40 rounded-xl px-2.5 py-1.5 bg-pj-bg">
+</div>
+</div>
+<button onclick="saveChannelLinks()" class="w-full bg-pj-yellow-main text-pj-blue-dark font-bold py-2 rounded-xl text-xs hover:bg-yellow-400 transition shadow-sm mt-2">บันทึกลิงก์ช่องทางและ Google Drive</button>
+</div>
+</div>
+
+<!-- อนุมัติรีวิวลูกค้า (ย้ายมาไว้ใต้ลิงก์ช่องทางติดต่อ) -->
+<div class="bg-pj-white p-4 rounded-2xl border-2 border-pj-pink/40 shadow-sm">
+<h3 class="font-bold text-sm text-pj-pink mb-3 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pj-pink inline-block"></span>อนุมัติรีวิวจากลูกค้า</h3>
+<div id="admin-pending-reviews-list" class="space-y-3 max-h-56 overflow-y-auto pr-1">
+<!-- Loaded dynamically -->
+</div>
+</div>
+
+<!-- เปลี่ยนรหัสผ่านแอดมิน (ย้ายมาไว้ใต้รีวิว) -->
+<div class="bg-pj-yellow-light/60 p-4 rounded-2xl border-2 border-pj-yellow-main shadow-sm">
+<h3 class="font-bold text-sm text-pj-blue-dark mb-2 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-pj-blue-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"/></svg>
+ตั้งค่าเปลี่ยนรหัสผ่านแอดมิน
+</h3>
+<div class="grid grid-cols-2 gap-2 mb-2">
+<input type="password" id="change-pass-new" placeholder="รหัสผ่านใหม่..." class="bg-white border border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs">
+<input type="password" id="change-pass-confirm" placeholder="ยืนยันรหัสผ่านใหม่..." class="bg-white border border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs">
+</div>
+<button onclick="changeAdminPassword()" class="w-full bg-pj-blue-dark text-white font-bold py-2 rounded-xl text-xs hover:bg-pj-blue-main transition shadow-sm">บันทึกรหัสผ่านใหม่</button>
+</div>
+</div>
+
+<!-- หน้าที่ 3: เช็คคิว -->
+<div id="admin-tab-3" class="admin-tab-page space-y-5 mt-4 hidden">
+<div class="bg-pj-white p-3.5 sm:p-4 rounded-2xl border-2 border-pj-pink/40 shadow-sm overflow-hidden">
+<h3 class="font-bold text-sm text-pj-blue-dark mb-3 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-400 inline-block"></span>เพิ่ม / แก้ไข / ลด คิวของลูกค้า</h3>
+<div class="flex flex-col gap-2 mb-3 w-full">
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-2 w-full">
+<input type="text" id="new-client-name" placeholder="ชื่อลูกค้า/ชื่อร้าน..." class="sm:col-span-7 w-full min-w-0 bg-pj-bg border border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-pj-pink">
+<select id="new-client-status" class="sm:col-span-5 w-full min-w-0 bg-pj-bg border border-pj-pink/40 rounded-xl px-2 py-1.5 text-xs font-bold text-pj-blue-dark focus:outline-none truncate">
+<option value="0">0% (รอบรีพ)</option>
+<option value="25">25% (บรีพแล้ว)</option>
+<option value="50">50% (กำลังทำ)</option>
+<option value="75">75% (รอเช็ค)</option>
+<option value="100">100% (ส่งแล้ว)</option>
+</select>
+</div>
+<div class="flex gap-2 w-full">
+<input type="text" id="new-client-note" placeholder="สั่งงานอะไร เช่น ป้ายบัญชี, ริชเมนู..." class="flex-1 min-w-0 bg-pj-bg border border-pj-pink/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-pj-pink">
+<button onclick="addNewQueueItem()" class="bg-green-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs hover:bg-green-600 transition shrink-0 shadow-sm">+ เพิ่มคิว</button>
+</div>
+</div>
+<div id="admin-queue-manage-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+<!-- Loaded dynamically -->
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+const ADMIN_EMAIL = 'mean13ayu@gmail.com';
+let currentAdminPass = '1234';
+if (localStorage.getItem('pj_admin_pass')) {
+  currentAdminPass = localStorage.getItem('pj_admin_pass');
+}
+
+/* รูปที่ฝังในโค้ด: 1.โลโก้ Miori 2.แบนเนอร์ 3.Block 4.Toon 5.Decor */
+const FIXED_IMAGES = {
+  logo: "ไม่มีชื่อ 73_20260922064650.png",
+  banner: "ไม่มีชื่อ 80_20260925012941.png",
+  block: "ไม่มีชื่อ 79_20260924224203.png",
+  toon: "ไม่มีชื่อ 79_20260924224154.png",
+  decor: "ไม่มีชื่อ 79_20260924224159.png"
+};
+
+let siteData = {
+  logoUrl: FIXED_IMAGES.logo,
+  bannerUrl: FIXED_IMAGES.banner,
+  products: [
+    { img: FIXED_IMAGES.block },
+    { img: FIXED_IMAGES.toon },
+    { img: FIXED_IMAGES.decor }
+  ],
+  links: {
+    facebook: "https://www.facebook.com/profile.php?id=61591413135110",
+    line: "https://lin.ee/XkF46in",
+    instagram: "https://www.instagram.com/pinkjulie.land",
+    driveBlock: "https://drive.google.com/drive/folders/10wVjpHKCr8rMZ-UoCd5G_ALc13AUC1Qk",
+    driveToon: "https://drive.google.com/drive/folders/1T36yZKLHN5huKfwu1NYW_PVLLsswHTiD",
+    driveDescor: "https://drive.google.com/drive/folders/1YLsW06GXE_ENus4ad8AUNU4FEM74Z2vl"
+  }
+};
+
+let queues = [
+  { id: 1, name: "คุณมินิ (ร้านน่ารัก)", status: 50, note: "ป้ายบัญชี ธีมพาสเทล" },
+  { id: 2, name: "คุณแพรวา WebShop", status: 25, note: "ทำเว็บไซต์หน้าร้าน" },
+  { id: 3, name: "คุณโบว์ลิ่ง Card", status: 75, note: "ริชเมนู" },
+  { id: 4, name: "คุณอาร์ม เดิมเกม", status: 100, note: "ป้ายเดิมเกม" },
+  { id: 5, name: "คุณจอย ป้ายบัญชี", status: 0, note: "ป้ายบัญชี" }
+];
+
+let reviews = [];
+
+/* Audio Music Toggle logic with loop support */
+let isPlayingMusic = false;
+function toggleMusic() {
+  const iframe = document.getElementById('bg-music-iframe');
+  const statusDot = document.getElementById('music-status-dot');
+  if (!iframe) return;
+  if (!isPlayingMusic) {
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    isPlayingMusic = true;
+    if(statusDot) { statusDot.classList.remove('bg-gray-400'); statusDot.classList.add('bg-green-500'); }
+  } else {
+    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    isPlayingMusic = false;
+    if(statusDot) { statusDot.classList.remove('bg-green-500'); statusDot.classList.add('bg-gray-400'); }
+  }
+}
+
+/* Broadcast Channel & Storage Sync */
+let broadcastChan = null;
+function initSharedDb() {
+  try {
+    if ('BroadcastChannel' in window) {
+      broadcastChan = new BroadcastChannel('miori_shop_channel');
+      broadcastChan.onmessage = (event) => {
+        if (event.data) {
+          if (event.data.siteData) siteData = event.data.siteData;
+          if (event.data.queues) queues = event.data.queues;
+          if (event.data.reviews) reviews = event.data.reviews;
+          renderSiteElements();
+          renderQueues();
+          renderReviews();
+          if (document.getElementById('modal-admin-panel') && document.getElementById('modal-admin-panel').classList.contains('active')) {
+            renderAdminQueueManage();
+            renderAdminPendingReviews();
+          }
+        }
+      };
+    }
+  } catch (e) { console.error("BroadcastChannel fail", e); }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'pj_site_data' && e.newValue) { try { siteData = JSON.parse(e.newValue); renderSiteElements(); } catch(err){} }
+    if (e.key === 'pj_queues' && e.newValue) { try { queues = JSON.parse(e.newValue); renderQueues(); } catch(err){} }
+    if (e.key === 'pj_reviews' && e.newValue) { try { reviews = JSON.parse(e.newValue); renderReviews(); } catch(err){} }
+  });
+}
+
+function pushSharedState() {
+  if (broadcastChan) {
+    try { broadcastChan.postMessage({ siteData: siteData, queues: queues, reviews: reviews }); } catch (e) {}
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const savedSiteData = localStorage.getItem('pj_site_data');
+    if (savedSiteData) siteData = JSON.parse(savedSiteData);
+    if (!siteData.links) {
+      siteData.links = {
+        facebook: "https://www.facebook.com/profile.php?id=61591413135110",
+        line: "https://lin.ee/XkF46in",
+        instagram: "https://www.instagram.com/pinkjulie.land",
+        driveBlock: "https://drive.google.com/drive/folders/10wVjpHKCr8rMZ-UoCd5G_ALc13AUC1Qk",
+        driveToon: "https://drive.google.com/drive/folders/1T36yZKLHN5huKfwu1NYW_PVLLsswHTiD",
+        driveDescor: "https://drive.google.com/drive/folders/1YLsW06GXE_ENus4ad8AUNU4FEM74Z2vl"
+      };
+    }
+    const savedQueues = localStorage.getItem('pj_queues');
+    if (savedQueues) {
+      queues = JSON.parse(savedQueues);
+      queues.forEach(q => { if (typeof q.note === 'undefined') q.note = ""; });
+    }
+    const savedReviews = localStorage.getItem('pj_reviews');
+    if (savedReviews) reviews = JSON.parse(savedReviews);
+  } catch(e) { console.error('LocalStorage load error', e); }
+  renderSiteElements();
+  renderQueues();
+  renderReviews();
+  initSharedDb();
+});
+
+function renderSiteElements() {
+  /* บังคับใช้รูปที่ฝังในโค้ดเสมอ (กันค่าเก่าใน localStorage มาทับ) */
+  siteData.logoUrl = FIXED_IMAGES.logo;
+  siteData.bannerUrl = FIXED_IMAGES.banner;
+  siteData.products = [
+    { img: FIXED_IMAGES.block },
+    { img: FIXED_IMAGES.toon },
+    { img: FIXED_IMAGES.decor }
+  ];
+  if(siteData.logoUrl) document.getElementById('site-logo-img').src = siteData.logoUrl;
+  if(siteData.bannerUrl) document.getElementById('site-banner-img').src = siteData.bannerUrl;
+  if(siteData.products && siteData.products[0] && siteData.products[0].img) document.getElementById('prod-img-1').src = siteData.products[0].img;
+  if(siteData.products && siteData.products[1] && siteData.products[1].img) document.getElementById('prod-img-2').src = siteData.products[1].img;
+  if(siteData.products && siteData.products[2] && siteData.products[2].img) document.getElementById('prod-img-3').src = siteData.products[2].img;
+  renderChannelLinks();
+}
+
+function renderChannelLinks() {
+  if (!siteData.links) return;
+  const fb = document.getElementById('contact-facebook-link');
+  const line = document.getElementById('contact-line-link');
+  const ig = document.getElementById('contact-instagram-link');
+  if (fb && siteData.links.facebook) fb.href = siteData.links.facebook;
+  if (line && siteData.links.line) line.href = siteData.links.line;
+  if (ig && siteData.links.instagram) ig.href = siteData.links.instagram;
+  const prodBlock = document.getElementById('prod-link-1');
+  const prodToon = document.getElementById('prod-link-2');
+  const prodDescor = document.getElementById('prod-link-3');
+  if (prodBlock && siteData.links.driveBlock) prodBlock.href = siteData.links.driveBlock;
+  if (prodToon && siteData.links.driveToon) prodToon.href = siteData.links.driveToon;
+  if (prodDescor && siteData.links.driveDescor) prodDescor.href = siteData.links.driveDescor;
+}
+
+function populateChannelLinksInputs() {
+  if (!siteData.links) return;
+  const fbInput = document.getElementById('link-facebook-input');
+  const lineInput = document.getElementById('link-line-input');
+  const blockInput = document.getElementById('link-drive-block-input');
+  const toonInput = document.getElementById('link-drive-toon-input');
+  const descorInput = document.getElementById('link-drive-descor-input');
+  if (fbInput) fbInput.value = siteData.links.facebook || '';
+  if (lineInput) lineInput.value = siteData.links.line || '';
+  if (blockInput) blockInput.value = siteData.links.driveBlock || '';
+  if (toonInput) toonInput.value = siteData.links.driveToon || '';
+  if (descorInput) descorInput.value = siteData.links.driveDescor || '';
+}
+
+function saveChannelLinks() {
+  const fb = document.getElementById('link-facebook-input').value.trim();
+  const line = document.getElementById('link-line-input').value.trim();
+  const block = document.getElementById('link-drive-block-input').value.trim();
+  const toon = document.getElementById('link-drive-toon-input').value.trim();
+  const descor = document.getElementById('link-drive-descor-input').value.trim();
+  if (!siteData.links) siteData.links = {};
+  if (fb) siteData.links.facebook = fb;
+  if (line) siteData.links.line = line;
+  if (block) siteData.links.driveBlock = block;
+  if (toon) siteData.links.driveToon = toon;
+  if (descor) siteData.links.driveDescor = descor;
+  try { localStorage.setItem('pj_site_data', JSON.stringify(siteData)); } catch(e) {}
+  renderChannelLinks();
+  pushSharedState();
+  alert('บันทึกลิงก์เรียบร้อยแล้วค่ะ');
+}
+
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if(modal) { modal.classList.remove('inactive'); modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+}
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if(modal) { modal.classList.remove('active'); modal.classList.add('inactive'); document.body.style.overflow = ''; }
+}
+function openReviewModal() { openModal('modal-review-form'); }
+function openAdminAuthModal() { openModal('modal-admin-auth'); }
+
+function checkAdminLogin() {
+  const emailInput = document.getElementById('admin-email-input');
+  const passInput = document.getElementById('admin-pass-input');
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const pass = passInput ? passInput.value.trim() : '';
+  if (email === ADMIN_EMAIL.toLowerCase() && pass === currentAdminPass) {
+    closeModal('modal-admin-auth');
+    if(emailInput) emailInput.value = '';
+    if(passInput) passInput.value = '';
+    loadAdminData();
+    openModal('modal-admin-panel');
+  } else {
+    alert('อีเมลหรือรหัสผ่านไม่ถูกต้องค่ะ');
+  }
+}
+
+function changeAdminPassword() {
+  const newPass = document.getElementById('change-pass-new').value.trim();
+  const confirmPass = document.getElementById('change-pass-confirm').value.trim();
+  if (!newPass) { alert('กรุณากรอกรหัสผ่านใหม่ด้วยนะคะ'); return; }
+  if (newPass !== confirmPass) { alert('รหัสผ่านใหม่และรหัสผ่านยืนยันไม่ตรงกันค่ะ'); return; }
+  currentAdminPass = newPass;
+  localStorage.setItem('pj_admin_pass', newPass);
+  document.getElementById('change-pass-new').value = '';
+  document.getElementById('change-pass-confirm').value = '';
+  alert('เปลี่ยนรหัสผ่านสำเร็จเรียบร้อยค่ะ!');
+}
+
+function previewImage(event, previewElemId) {
+  const file = event.target.files[0];
+  const imgElem = document.getElementById(previewElemId);
+  if (file && imgElem) {
+    const reader = new FileReader();
+    reader.onload = function(e) { imgElem.src = e.target.result; imgElem.classList.remove('hidden'); };
+    reader.readAsDataURL(file);
+  }
+}
+
+function compressAndProcessFile(file, maxWidth, maxHeight, callback) {
+  if (!file) { callback(null); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
+      if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      callback(canvas.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = function() { callback(null); };
+    img.src = e.target.result;
+  };
+  reader.onerror = function() { callback(null); };
+  reader.readAsDataURL(file);
+}
+
+function trySaveSiteData() {
+  try { localStorage.setItem('pj_site_data', JSON.stringify(siteData)); return true; }
+  catch (e) { console.error('Storage quota exceeded', e); return false; }
+}
+
+function saveAllImageChanges() {
+  const logoFile = document.getElementById('file-input-logo').files[0];
+  const bannerFile = document.getElementById('file-input-banner').files[0];
+  const prod1File = document.getElementById('file-input-prod1').files[0];
+  const prod2File = document.getElementById('file-input-prod2').files[0];
+  const prod3File = document.getElementById('file-input-prod3').files[0];
+
+  let tasks = [
+    { file: logoFile, w: 400, h: 400, apply: (res) => siteData.logoUrl = res },
+    { file: bannerFile, w: 1122, h: 495, apply: (res) => siteData.bannerUrl = res },
+    { file: prod1File, w: 700, h: 700, apply: (res) => siteData.products[0].img = res },
+    { file: prod2File, w: 700, h: 700, apply: (res) => siteData.products[1].img = res },
+    { file: prod3File, w: 700, h: 700, apply: (res) => siteData.products[2].img = res }
+  ];
+  let activeTasks = tasks.filter(t => t.file);
+  if (activeTasks.length === 0) { alert('กรุณาเลือกไฟล์รูปภาพที่ต้องการเปลี่ยนก่อนนะคะ'); return; }
+
+  const backupSiteData = JSON.parse(JSON.stringify(siteData));
+  let completed = 0;
+  let anyFailedToRead = false;
+  activeTasks.forEach(task => {
+    compressAndProcessFile(task.file, task.w, task.h, (base64Res) => {
+      if (base64Res) { task.apply(base64Res); } else { anyFailedToRead = true; }
+      completed++;
+      if (completed === activeTasks.length) {
+        const saved = trySaveSiteData();
+        if (saved) {
+          renderSiteElements();
+          pushSharedState();
+          if (anyFailedToRead) alert('บันทึกรูปภาพบางส่วนเรียบร้อย แต่มีบางไฟล์อ่านไม่สำเร็จค่ะ ลองอัปโหลดใหม่อีกครั้งนะคะ');
+          else alert('บันทึกรูปภาพทั้งหมดเรียบร้อยแล้วค่ะ!');
+        } else {
+          siteData = backupSiteData;
+          renderSiteElements();
+          alert('บันทึกรูปภาพไม่สำเร็จค่ะ - พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็ม ลองลดขนาดไฟล์รูปหรือเปลี่ยนทีละรูปแทนนะคะ');
+        }
+      }
+    });
+  });
+}
+
+function loadAdminData() {
+  populateChannelLinksInputs();
+  renderAdminQueueManage();
+  renderAdminPendingReviews();
+  switchAdminTab('admin-tab-2');
+}
+
+function switchAdminTab(tabId) {
+  document.querySelectorAll('.admin-tab-page').forEach(page => {
+    if (page.id === tabId) page.classList.remove('hidden');
+    else page.classList.add('hidden');
+  });
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.getElementById('admin-tab-btn-' + tabId.split('-').pop());
+  if (activeBtn) activeBtn.classList.add('active');
+}
+
+function renderQueues(filter = "") {
+  const container = document.getElementById('queue-list-container');
+  if(!container) return;
+  container.innerHTML = "";
+  const filtered = queues.filter(q => q.name.toLowerCase().includes(filter.toLowerCase()));
+  if (filtered.length === 0) {
+    container.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">ไม่พบคิวงานตามชื่อที่ค้นหา</p>';
+    return;
+  }
+  filtered.forEach(q => {
+    let badgeColor = "bg-gray-200 text-gray-600";
+    if(q.status == 25) badgeColor = "bg-pink-100 text-pink-600";
+    if(q.status == 50) badgeColor = "bg-yellow-100 text-yellow-700";
+    if(q.status == 75) badgeColor = "bg-pink-200 text-pink-700";
+    if(q.status == 100) badgeColor = "bg-green-100 text-green-700";
+    const div = document.createElement('div');
+    div.className = "bg-pj-bg p-3 rounded-2xl border border-pj-pink/30 flex flex-col gap-1.5";
+    div.innerHTML = `
+      <div class="flex justify-between items-center">
+        <span class="font-bold text-xs text-pj-blue-dark">${q.name}</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeColor}">${q.status}%</span>
+      </div>
+      ${q.note ? `<div class="order-note-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>${q.note}</div>` : ''}
+      <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+        <div class="bg-pj-pink h-full transition-all duration-500" style="width: ${q.status}%"></div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function searchQueue() {
+  const val = document.getElementById('queue-search-input').value;
+  renderQueues(val);
+}
+
+function renderAdminQueueManage() {
+  const container = document.getElementById('admin-queue-manage-list');
+  if(!container) return;
+  container.innerHTML = "";
+  queues.forEach((q) => {
+    const div = document.createElement('div');
+    div.className = "bg-pj-bg p-2.5 rounded-xl border border-pj-pink/30 flex flex-col gap-1.5 text-xs";
+    div.innerHTML = `
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-bold text-pj-blue-dark truncate max-w-[150px]">${q.name}</span>
+        <div class="flex items-center gap-1.5">
+          <select onchange="updateQueueStatus(${q.id}, this.value)" class="bg-white border border-pj-pink/40 rounded-lg px-1.5 py-1 text-[11px] font-bold">
+            <option value="0" ${q.status == 0 ? 'selected' : ''}>0%</option>
+            <option value="25" ${q.status == 25 ? 'selected' : ''}>25%</option>
+            <option value="50" ${q.status == 50 ? 'selected' : ''}>50%</option>
+            <option value="75" ${q.status == 75 ? 'selected' : ''}>75%</option>
+            <option value="100" ${q.status == 100 ? 'selected' : ''}>100%</option>
+          </select>
+          <button onclick="deleteQueueItem(${q.id})" class="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition" title="ลบคิว">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <input type="text" value="${(q.note || '').replace(/"/g, '&quot;')}" onchange="updateQueueNote(${q.id}, this.value)" placeholder="สั่งงานอะไร..." class="w-full bg-white border border-pj-pink/30 rounded-lg px-2 py-1 text-[11px] text-pj-blue-dark/80">
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addNewQueueItem() {
+  const nameInput = document.getElementById('new-client-name');
+  const statusSelect = document.getElementById('new-client-status');
+  const noteInput = document.getElementById('new-client-note');
+  const name = nameInput.value.trim();
+  const status = parseInt(statusSelect.value);
+  const note = noteInput ? noteInput.value.trim() : "";
+  if(!name) { alert('กรุณากรอกชื่อลูกค้าด้วยนะคะ'); return; }
+  const newId = queues.length > 0 ? Math.max(...queues.map(q => q.id)) + 1 : 1;
+  queues.push({ id: newId, name: name, status: status, note: note });
+  nameInput.value = '';
+  if (noteInput) noteInput.value = '';
+  saveQueues();
+  renderAdminQueueManage();
+  renderQueues();
+}
+
+function updateQueueStatus(id, newStatus) {
+  const target = queues.find(q => q.id === id);
+  if(target) { target.status = parseInt(newStatus); saveQueues(); renderQueues(); }
+}
+
+function updateQueueNote(id, newNote) {
+  const target = queues.find(q => q.id === id);
+  if(target) { target.note = newNote; saveQueues(); renderQueues(); }
+}
+
+function deleteQueueItem(id) {
+  if(confirm('คุณต้องการลบคิวงานนี้ใช่หรือไม่?')) {
+    queues = queues.filter(q => q.id !== id);
+    saveQueues();
+    renderAdminQueueManage();
+    renderQueues();
+  }
+}
+
+function saveQueues() {
+  try { localStorage.setItem('pj_queues', JSON.stringify(queues)); } catch(e){}
+  pushSharedState();
+}
+
+function handleReviewSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('review-name').value.trim();
+  const text = document.getElementById('review-text').value.trim();
+  const fileInput = document.getElementById('review-proof-file');
+  if (!fileInput.files[0]) { alert('กรุณาแนบรูปภาพหลักฐานการซื้อขายด้วยนะคะ'); return; }
+  compressAndProcessFile(fileInput.files[0], 300, 300, (imgBase64) => {
+    const newReview = {
+      id: Date.now(),
+      name: name,
+      text: text,
+      img: imgBase64 || "https://placehold.co/100x100/ffb3c6/ffffff?text=User",
+      approved: false
+    };
+    reviews.push(newReview);
+    try { localStorage.setItem('pj_reviews', JSON.stringify(reviews)); } catch(err){}
+    pushSharedState();
+    alert('ส่งรีวิวเรียบร้อยแล้วค่ะ! รอแอดมินอนุมัตินะคะ');
+    closeModal('modal-review-form');
+    e.target.reset();
+  });
+}
+
+function renderReviews() {
+  const container = document.getElementById('reviews-display-list');
+  if (!container) return;
+  container.innerHTML = '';
+  const approved = reviews.filter(r => r.approved);
+  if (approved.length === 0) {
+    container.innerHTML = '<p class="text-xs text-center text-pj-blue-dark/50 py-3">ยังไม่มีรีวิว ร้านเปิดใหม่รอรีวิวจากลูกค้านะคะ 💕</p>';
+    return;
+  }
+  approved.forEach(r => {
+    const div = document.createElement('div');
+    div.className = "bg-pj-bg p-3 rounded-2xl border border-pj-pink/30 flex gap-3 items-center";
+    div.innerHTML = `
+      <img src="${r.img}" class="w-10 h-10 rounded-full object-cover border border-pj-pink shrink-0">
+      <div class="text-xs">
+        <p class="font-bold text-pj-blue-dark">${r.name}</p>
+        <p class="text-pj-blue-dark/80 mt-0.5">${r.text}</p>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderAdminPendingReviews() {
+  const container = document.getElementById('admin-pending-reviews-list');
+  if (!container) return;
+  container.innerHTML = '';
+  if (reviews.length === 0) {
+    container.innerHTML = '<p class="text-xs text-center text-gray-400 py-3">ไม่มีรายการรีวิวในระบบ</p>';
+    return;
+  }
+  reviews.forEach(r => {
+    const div = document.createElement('div');
+    div.className = "bg-white p-3 rounded-xl border border-pj-pink/30 flex items-center justify-between gap-2 text-xs";
+    div.innerHTML = `
+      <div class="flex items-center gap-2 overflow-hidden">
+        <img src="${r.img}" class="w-8 h-8 rounded-full object-cover shrink-0">
+        <div class="truncate">
+          <p class="font-bold text-pj-blue-dark truncate">${r.name} ${r.approved ? '<span class="text-[9px] text-green-600 font-normal">(อนุมัติแล้ว)</span>' : ''}</p>
+          <p class="text-[10px] text-gray-500 truncate">${r.text}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1 shrink-0">
+        ${!r.approved ? `<button onclick="approveReview(${r.id})" class="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-green-600">อนุมัติ</button>` : ''}
+        <button onclick="deleteReview(${r.id})" class="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function approveReview(id) {
+  const rev = reviews.find(r => r.id === id);
+  if (rev) { rev.approved = true; saveReviews(); renderAdminPendingReviews(); renderReviews(); }
+}
+
+function deleteReview(id) {
+  if(confirm('คุณต้องการลบรีวิวนี้ใช่หรือไม่?')) {
+    reviews = reviews.filter(r => r.id !== id);
+    saveReviews();
+    renderAdminPendingReviews();
+    renderReviews();
+  }
+}
+
+function saveReviews() {
+  try { localStorage.setItem('pj_reviews', JSON.stringify(reviews)); } catch(e){}
+  pushSharedState();
+}
+</script>
+</body>
+</html>
