@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบหลังบ้านแอดมิน</title>
-    <!-- โหลดไลบรารี Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #f9f9f9; }
@@ -25,9 +24,9 @@
         <button onclick="login()">เข้าสู่ระบบ</button>
     </div>
 
-    <!-- ส่วนที่ 2: ฟอร์มจัดการข้อมูลหลังล็อกอินแล้ว -->
+    <!-- ส่วนที่ 2: ฟอร์มจัดการข้อมูล -->
     <div id="admin-section" class="card hidden">
-        <h2>📝 เพิ่ม/แก้ไขข้อมูลเว็บไซต์</h2>
+        <h2>📝 เพิ่มประกาศ / ข่าวสาร</h2>
         <p id="admin-user" style="color: #666; font-size: 14px;"></p>
         
         <label>หัวข้อ:</label>
@@ -44,12 +43,14 @@
     </div>
 
     <script>
-        // ใส่ค่า Project URL และ Anon Key ของคุณตรงนี้
-        const SUPABASE_URL = 'ใส่_Project_URL_ของคุณ';
+        // ใส่ Project URL ของคุณลงไปแล้ว
+        const SUPABASE_URL = 'https://zfabuttsvsbgaskmhibb.supabase.co';
+        
+        // ⚠️ อย่าลืมเปลี่ยนตรงนี้ เป็น anon public key ของคุณ
         const SUPABASE_ANON_KEY = 'ใส่_anon_public_Key_ของคุณ';
+        
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // เช็คว่าแอดมินเคยล็อกอินค้างไว้ไหม
         checkUser();
 
         async function login() {
@@ -86,7 +87,6 @@
             }
         }
 
-        // ฟังก์ชันสำคัญ: อัปโหลดรูปภาพเข้า Storage และบันทึกข้อมูลลง Database พร้อมกัน
         async function saveData() {
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
@@ -98,32 +98,29 @@
                 return;
             }
 
-            // ถ้าแอดมินเลือกรูปภาพมาด้วย ให้ทำการอัปโหลดก่อน
+            // ถ้ามีการเลือกรูปภาพ ให้อัปโหลดเข้า Storage ก่อน
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}.${fileExt}`; // ตั้งชื่อไฟล์ใหม่กันชื่อซ้ำ
-                const filePath = `${fileName}`;
+                const fileName = `${Date.now()}.${fileExt}`;
 
-                // อัปโหลดไปที่ Supabase Storage (ชื่อ bucket ของคุณ เช่น 'images')
-                const { data: uploadData, error: uploadError } = await supabaseClient.storage
-                    .from('images')
-                    .upload(filePath, file);
+                const { error: uploadError } = await supabaseClient.storage
+                    .from('images') // ชื่อ Bucket ที่คุณสร้างไว้
+                    .upload(fileName, file);
 
                 if (uploadError) {
                     alert('อัปโหลดรูปไม่สำเร็จ: ' + uploadError.message);
                     return;
                 }
 
-                // ดึง Public URL ของรูปภาพที่เพิ่งอัปโหลด
                 const { data: publicUrlData } = supabaseClient.storage
                     .from('images')
-                    .getPublicUrl(filePath);
+                    .getPublicUrl(fileName);
 
                 imageUrl = publicUrlData.publicUrl;
             }
 
-            // บันทึกข้อมูลข้อความและลิงก์รูปภาพลงใน Table (เช่น 'posts')
+            // บันทึกข้อมูลลงตาราง posts
             const { error: insertError } = await supabaseClient
                 .from('posts')
                 .insert([
@@ -131,10 +128,9 @@
                 ]);
 
             if (insertError) {
-                alert('บันทึกข้อมูลลงฐานข้อมูลไม่สำเร็จ: ' + insertError.message);
+                alert('บันทึกข้อมูลไม่สำเร็จ: ' + insertError.message);
             } else {
                 alert('บันทึกข้อมูลสำเร็จเรียบร้อย!');
-                // ล้างค่าในฟอร์ม
                 document.getElementById('title').value = '';
                 document.getElementById('description').value = '';
                 fileInput.value = '';
