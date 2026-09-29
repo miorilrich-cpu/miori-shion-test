@@ -17,8 +17,12 @@
     <div id="posts-container">กำลังโหลดข้อมูล...</div>
 
     <script>
-        const SUPABASE_URL = 'ใส่_Project_URL_ของคุณ';
+        // ใส่ Project URL ของคุณลงไปแล้ว
+        const SUPABASE_URL = 'https://zfabuttsvsbgaskmhibb.supabase.co';
+        
+        // ⚠️ อย่าลืมเปลี่ยนตรงนี้ เป็น anon public key ของคุณ (ก๊อปปี้มาจากที่เดียวกับ Project URL)
         const SUPABASE_ANON_KEY = 'ใส่_anon_public_Key_ของคุณ';
+        
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // 1. โหลดข้อมูลทั้งหมดเมื่อเปิดเว็บ
@@ -30,11 +34,11 @@
 
             const container = document.getElementById('posts-container');
             if (error) {
-                container.innerHTML = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+                container.innerHTML = 'เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message;
                 return;
             }
 
-            if (data.length === 0) {
+            if (!data || data.length === 0) {
                 container.innerHTML = 'ยังไม่มีข้อมูลค่ะ';
                 return;
             }
@@ -53,11 +57,11 @@
 
         fetchPosts();
 
-        // 2. ระบบ Realtime: ถ้าแอดมินกดบันทึกข้อมูลใหม่จากมือถือ หน้าเว็บนี้จะอัปเดตอัตโนมัติทันที!
+        // 2. ระบบ Realtime: ถ้าแอดมินกดบันทึกข้อมูลใหม่ หน้าเว็บนี้จะอัปเดตอัตโนมัติทันที
         supabaseClient
             .channel('public:posts')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, payload => {
-                fetchPosts(); // สั่งดึงข้อมูลใหม่มาแสดงทันทีที่มีการเปลี่ยนแปลง
+                fetchPosts(); 
             })
             .subscribe();
     </script>
